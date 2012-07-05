@@ -238,7 +238,7 @@ function! xolox#session#auto_load() " {{{2
     let path = xolox#session#name_to_path(session)
     if filereadable(path) && !s:session_is_locked(path)
       let msg = "Do you want to restore your %s editing session?"
-      let label = session != 'default' ? 'last used' : 'default'
+      let label = session != s:get_default_name() ? 'last used' : s:get_default_name()
       if s:prompt(printf(msg, label), 'g:session_autoload')
         execute 'OpenSession' fnameescape(session)
       endif
@@ -515,7 +515,7 @@ function! s:select_name(name, action) " {{{2
   endif
   let sessions = sort(xolox#session#get_names())
   if empty(sessions)
-    return 'default'
+    return s:get_default_name()
   elseif len(sessions) == 1
     return sessions[0]
   endif
@@ -539,7 +539,15 @@ function! s:get_name(name, use_default) " {{{2
       let name = xolox#session#path_to_name(v:this_session)
     endif
   endif
-  return name != '' ? name : a:use_default ? 'default' : ''
+  return name != '' ? name : a:use_default ? s:get_default_name() : ''
+endfunction
+
+function! s:get_default_name()
+  if g:session_use_cwd_as_default
+    return substitute(fnamemodify(getcwd(), ':p:h'), '/', '%', 'g')
+  else
+    return 'default'
+  end
 endfunction
 
 function! xolox#session#name_to_path(name) " {{{2
@@ -585,7 +593,7 @@ function! s:last_session_recall()
       return readfile(fname)[0]
     endif
   endif
-  return 'default'
+  return s:get_default_name()
 endfunction
 
 " Lock file management: {{{2

@@ -60,6 +60,12 @@ if !exists('g:session_command_aliases')
   let g:session_command_aliases = 0
 endif
 
+" If you want to use cwd as the default session name instead of `default',
+" enable this option.
+if !exists('g:session_use_cwd_as_default')
+  let g:session_use_cwd_as_default = 0
+endif
+
 " Make sure the session scripts directory exists and is writable.
 let s:directory = fnamemodify(g:session_directory, ':p')
 if !isdirectory(s:directory)
