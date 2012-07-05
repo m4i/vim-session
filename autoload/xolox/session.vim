@@ -391,6 +391,9 @@ function! xolox#session#save_cmd(name, bang) abort " {{{2
     if xolox#misc#os#is_win() && &ssop !~ '\<unix\>'
       call map(lines, 'v:val . "\r"')
     endif
+    if g:session_backup
+      call rename(path, path . '~')
+    endif
     if writefile(lines, path) != 0
       let msg = "session.vim %s: Failed to save %s session to %s!"
       call xolox#misc#msg#warn(msg, g:xolox#session#version, string(name), friendly_path)

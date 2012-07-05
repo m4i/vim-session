@@ -60,6 +60,12 @@ if !exists('g:session_command_aliases')
   let g:session_command_aliases = 0
 endif
 
+" If you want to back up the old session file before saving the session,
+" enable this option.
+if !exists('g:session_backup')
+  let g:session_backup = 0
+endif
+
 " Make sure the session scripts directory exists and is writable.
 let s:directory = fnamemodify(g:session_directory, ':p')
 if !isdirectory(s:directory)
